@@ -15,7 +15,7 @@ export const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState();
-  const [setCookie] = useCookies(); //cookies, removeCookieは現時点では使用しない
+  const [, setCookie] = useCookies(); //cookies, removeCookieは現時点では使用しない
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const onSignIn = () => {

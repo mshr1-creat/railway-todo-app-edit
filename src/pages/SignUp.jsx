@@ -16,7 +16,7 @@ export const SignUp = () => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessge] = useState();
-  const [setCookie] = useCookies(); //cookies, removeCookieは現時点では使用しない
+  const [, setCookie] = useCookies(); //cookies, removeCookieは現時点では使用しない
   useEffect(() => {
     if (auth) {
       navigate('/');

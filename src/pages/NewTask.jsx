@@ -96,9 +96,10 @@ export const NewTask = () => {
           <label>期限</label>
           <br />
           <input
-            type="date"
+            type="datetime-local"
             onChange={handleDueDateChange}
             className="new-task-due-date"
+            value={dueDate}
           />
           <br />
           <button

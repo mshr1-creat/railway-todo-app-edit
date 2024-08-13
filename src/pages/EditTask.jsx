@@ -13,18 +13,22 @@ export const EditTask = () => {
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
   const [isDone, setIsDone] = useState();
+  const [dueDate, setDueDate] = useState(''); // 期限の状態を追加
   const [errorMessage, setErrorMessage] = useState('');
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleDetailChange = (e) => setDetail(e.target.value);
   const handleIsDoneChange = (e) => setIsDone(e.target.value === 'done');
+  const handleDueDateChange = (e) => setDueDate(e.target.value); // 期限の変更ハンドラ
   const onUpdateTask = () => {
     console.log(isDone);
     const data = {
       title: title,
       detail: detail,
       done: isDone,
+      dueDate: dueDate, // 期限を追加
     };
 
+    // サーバーに期限情報を送信しない形で、期限をフロントエンドでのみ管理
     axios
       .put(`${url}/lists/${listId}/tasks/${taskId}`, data, {
         headers: {
@@ -67,6 +71,7 @@ export const EditTask = () => {
         setTitle(task.title);
         setDetail(task.detail);
         setIsDone(task.done);
+        setDueDate(task.dueDate || ''); // 期限を設定
       })
       .catch((err) => {
         setErrorMessage(`タスク情報の取得に失敗しました。${err}`);
@@ -118,6 +123,14 @@ export const EditTask = () => {
             />
             完了
           </div>
+          <label>期限</label>
+          <br />
+          <input
+            type="datetime-local"
+            onChange={handleDueDateChange}
+            className="edit-task-dueDate"
+            value={dueDate}
+          />
           <button
             type="button"
             className="delete-task-button"

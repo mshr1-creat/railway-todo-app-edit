@@ -41,7 +41,8 @@ export const Home = () => {
           },
         })
         .then((res) => {
-          setTasks(res.data.tasks);
+          console.log(res.data.tasks); // 取得したタスクデータをコンソールに出力
+          setTasks(res.data.tasks); // ここで取得したタスクのデータに `dueDate` が含まれているか確認
         })
         .catch((err) => {
           setErrorMessage(`タスクの取得に失敗しました。${err}`);
@@ -128,54 +129,58 @@ const Tasks = (props) => {
   const { tasks, selectListId, isDoneDisplay } = props;
   if (tasks === null) return <></>;
 
-  if (isDoneDisplay == 'done') {
-    return (
-      <ul>
-        {tasks
-          .filter((task) => {
-            return task.done === true;
-          })
-          .map((task, key) => (
-            <li key={key} className="task-item">
-              <Link
-                to={`/lists/${selectListId}/tasks/${task.id}`}
-                className="task-item-link"
-              >
-                {task.title}
-                <br />
-                {task.done ? '完了' : '未完了'}
-              </Link>
-            </li>
-          ))}
-      </ul>
-    );
-  }
+  const calculateRemainingTime = (dueDate) => {
+    const now = new Date(); // 現在の日時を取得
+    const due = new Date(dueDate); // 指定された期限日時を Date オブジェクトに変換
+    const timeDiff = due - now; // 現在の日時と期限日時の差をミリ秒単位で計算
+
+    if (timeDiff <= 0) return '期限切れ'; // timediffが0の場合、期限切れを表示する
+
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // 残り日数を計算
+    const hours = Math.floor(
+      (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    ); // 残り時間を計算
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60)); // 残り分を計算
+
+    return `${days}日 ${hours}時間 ${minutes}分`; // 結果をフォーマットして返す
+  };
+
+  //  tasks 配列をフィルタリングして、新しい配列 filteredTasks を作成
+  const filteredTasks = tasks.filter((task) =>
+    isDoneDisplay === 'done' ? task.done : !task.done
+  ); // isDoneDisplay が 'done' の場合、タスクが完了している (task.done が true) ものだけをフィルタリングする。
 
   return (
     <ul>
-      {tasks
-        .filter((task) => {
-          return task.done === false;
-        })
-        .map((task, key) => (
-          <li key={key} className="task-item">
-            <Link
-              to={`/lists/${selectListId}/tasks/${task.id}`}
-              className="task-item-link"
-            >
-              {task.title}
-              <br />
-              {task.done ? '完了' : '未完了'}
-            </Link>
-          </li>
-        ))}
+      {filteredTasks.map((task, key) => (
+        <li key={key} className="task-item">
+          <Link
+            to={`/lists/${selectListId}/tasks/${task.id}`}
+            className="task-item-link"
+          >
+            {task.title}
+            <br />
+            {task.done ? '完了' : '未完了'}
+            <br />
+            {task.dueDate ? (
+              <>
+                期限:${new Date(task.dueDate).toLocaleString()}`
+                <br />
+                残り: {calculateRemainingTime(task.dueDate)}
+              </>
+            ) : (
+              '期限未設定'
+            )}
+          </Link>
+        </li>
+      ))}
     </ul>
   );
 };
 
 Tasks.propTypes = {
   tasks: PropTypes.array.isRequired,
-  selectListId: PropTypes.number,
+  selectListId: PropTypes.number.isRequired, // `number` 型を期待
   isDoneDisplay: PropTypes.string.isRequired,
 };
 

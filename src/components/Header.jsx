@@ -9,7 +9,7 @@ export const Header = () => {
   const auth = useSelector((state) => state.auth.isSignIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [removeCookie] = useCookies(); //cookies, setCookieは現時点では使用しない
+  const [, , removeCookie] = useCookies(); //cookies, setCookieは現時点では使用しない
   const handleSignOut = () => {
     dispatch(signOut());
     removeCookie('token');

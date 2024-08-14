@@ -15,16 +15,23 @@ export const NewTask = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [cookies] = useCookies();
   const navigate = useNavigate();
+
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleDetailChange = (e) => setDetail(e.target.value);
   const handleDueDateChange = (e) => setDueDate(e.target.value); // 追加: 期限変更ハンドラ
   const handleSelectList = (id) => setSelectListId(id);
+
   const onCreateTask = () => {
+    if (selectListId === undefined) {
+      setErrorMessage('リストが選択されていません');
+      return;
+    }
+
     const data = {
       title: title,
       detail: detail,
       done: false,
-      dueDate: dueDate, // 追加: 期限データ
+      dueDate: dueDate ? new Date(dueDate).toISOString() : null, // 期限をISO形式に変換
     };
 
     axios

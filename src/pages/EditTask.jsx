@@ -18,14 +18,17 @@ export const EditTask = () => {
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleDetailChange = (e) => setDetail(e.target.value);
   const handleIsDoneChange = (e) => setIsDone(e.target.value === 'done');
-  const handleDueDateChange = (e) => setDueDate(e.target.value); // 期限の変更ハンドラ
+  const handleDueDateChange = (e) => {
+    setDueDate(e.target.value || ''); // 期限の変更ハンドラ
+    console.log('変更された期限日時:', e.target.value); // 追加: デバッグ用ログ
+  };
   const onUpdateTask = () => {
     console.log(isDone);
     const data = {
       title: title,
       detail: detail,
       done: isDone,
-      dueDate: dueDate, // 期限を追加
+      dueDate: dueDate ? new Date(dueDate).toISOString() : null, // 期限をISO形式に変換
     };
 
     // サーバーに期限情報を送信しない形で、期限をフロントエンドでのみ管理
@@ -72,6 +75,7 @@ export const EditTask = () => {
         setDetail(task.detail);
         setIsDone(task.done);
         setDueDate(task.dueDate || ''); // 期限を設定
+        console.log('取得した期限日時:', task.dueDate); // 追加: デバッグ用ログ
       })
       .catch((err) => {
         setErrorMessage(`タスク情報の取得に失敗しました。${err}`);

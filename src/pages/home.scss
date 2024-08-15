@@ -74,3 +74,92 @@
 .display-select {
   width: 100%;
 }
+
+// タブレット (768px) 用スタイル
+@media (max-width: 768px) {
+  .taskList {
+    width: 90%; 
+    margin: 20px auto;
+  }
+
+  .list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .list-menu {
+    text-align: left;
+  }
+
+  .list-tab {
+    flex-direction: column;
+    overflow-x: visible;
+  }
+
+  .list-tab-item {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    text-align: center;
+  }
+
+  .tasks-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .task-item {
+    height: auto;
+    width: 100%;
+    font-size: medium;
+  }
+
+  .display-select-wrapper {
+    width: 100%;
+    margin: 0 0 15px 0;
+  }
+}
+
+// スマホ (320px) 用スタイル
+@media (max-width: 320px) {
+  .taskList {
+    width: 95%; // 小さい画面でもより大きく見えるように95%に設定
+    margin: 10px auto;
+  }
+
+  .list-header {
+    flex-direction: column; // タブを縦に並べるようにする
+    align-items: flex-start;
+  }
+
+  .list-menu {
+    text-align: left;
+  }
+
+  .list-tab {
+    flex-direction: column;
+  }
+
+  .list-tab-item {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 3px;
+    text-align: center;
+  }
+
+  .tasks-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .task-item {
+    height: auto;
+    width: 100%;
+    font-size: small;
+  }
+
+  .display-select-wrapper {
+    width: 100%;
+    margin: 0 0 10px 0;
+  }
+}

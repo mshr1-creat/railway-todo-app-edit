@@ -22,7 +22,7 @@ export const NewTask = () => {
   const handleSelectList = (id) => setSelectListId(id);
 
   const onCreateTask = () => {
-    if (selectListId === undefined) {
+    if (!selectListId) {
       setErrorMessage('リストが選択されていません');
       return;
     }
@@ -31,7 +31,7 @@ export const NewTask = () => {
       title: title,
       detail: detail,
       done: false,
-      dueDate: dueDate ? new Date(dueDate).toISOString() : null, // 期限をISO形式に変換
+      limit: dueDate ? new Date(dueDate).toISOString() : null, // 期限をISO形式に変換
     };
 
     axios
@@ -57,7 +57,7 @@ export const NewTask = () => {
       })
       .then((res) => {
         setLists(res.data);
-        setSelectListId(res.data[0]?.id);
+        setSelectListId(res.data[0]?.id.toString() || ''); // 初期値を設定
       })
       .catch((err) => {
         setErrorMessage(`リストの取得に失敗しました。${err}`);
@@ -76,6 +76,7 @@ export const NewTask = () => {
           <select
             onChange={(e) => handleSelectList(e.target.value)}
             className="new-task-select-list"
+            value={selectListId}
           >
             {lists.map((list, key) => (
               <option key={key} className="list-item" value={list.id}>
@@ -90,6 +91,7 @@ export const NewTask = () => {
             type="text"
             onChange={handleTitleChange}
             className="new-task-title"
+            value={title}
           />
           <br />
           <label>詳細</label>
@@ -98,6 +100,7 @@ export const NewTask = () => {
             type="text"
             onChange={handleDetailChange}
             className="new-task-detail"
+            value={detail}
           />
           <br />
           <label>期限</label>

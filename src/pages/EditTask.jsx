@@ -12,23 +12,22 @@ export const EditTask = () => {
   const [cookies] = useCookies();
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
-  const [isDone, setIsDone] = useState();
+  const [isDone, setIsDone] = useState(false);
   const [dueDate, setDueDate] = useState(''); // 期限の状態を追加
   const [errorMessage, setErrorMessage] = useState('');
+
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleDetailChange = (e) => setDetail(e.target.value);
   const handleIsDoneChange = (e) => setIsDone(e.target.value === 'done');
-  const handleDueDateChange = (e) => {
-    setDueDate(e.target.value || ''); // 期限の変更ハンドラ
-    console.log('変更された期限日時:', e.target.value); // 追加: デバッグ用ログ
-  };
+  const handleDueDateChange = (e) => setDueDate(e.target.value || ''); // 期限の変更ハンドラ
+
   const onUpdateTask = () => {
     console.log(isDone);
     const data = {
       title: title,
       detail: detail,
       done: isDone,
-      dueDate: dueDate ? new Date(dueDate).toISOString() : null, // 期限をISO形式に変換
+      limit: dueDate ? new Date(dueDate).toISOString() : null, // 期限をISO形式に変換
     };
 
     // サーバーに期限情報を送信しない形で、期限をフロントエンドでのみ管理
@@ -38,8 +37,7 @@ export const EditTask = () => {
           authorization: `Bearer ${cookies.token}`,
         },
       })
-      .then((res) => {
-        console.log(res.data);
+      .then(() => {
         navigate('/');
       })
       .catch((err) => {
@@ -70,17 +68,18 @@ export const EditTask = () => {
         },
       })
       .then((res) => {
+        console.log('API レスポンス:', res.data); // 追加: API レスポンスの確認
         const task = res.data;
-        setTitle(task.title);
-        setDetail(task.detail);
-        setIsDone(task.done);
-        setDueDate(task.dueDate || ''); // 期限を設定
+        setTitle(task.title || ''); // 初期値として空文字を設定
+        setDetail(task.detail || ''); // 初期値として空文字を設定
+        setIsDone(task.done || false); // 初期値として false を設定
+        setDueDate(task.limit || ''); // 初期値として空文字を設定
         console.log('取得した期限日時:', task.dueDate); // 追加: デバッグ用ログ
       })
       .catch((err) => {
         setErrorMessage(`タスク情報の取得に失敗しました。${err}`);
       });
-  }, []);
+  }, [listId, taskId, cookies.token]);
 
   return (
     <div>
@@ -114,7 +113,7 @@ export const EditTask = () => {
               name="status"
               value="todo"
               onChange={handleIsDoneChange}
-              checked={isDone === false ? 'checked' : ''}
+              checked={!isDone}
             />
             未完了
             <input
@@ -123,7 +122,7 @@ export const EditTask = () => {
               name="status"
               value="done"
               onChange={handleIsDoneChange}
-              checked={isDone === true ? 'checked' : ''}
+              checked={isDone}
             />
             完了
           </div>

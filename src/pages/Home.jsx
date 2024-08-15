@@ -10,11 +10,13 @@ import PropTypes from 'prop-types';
 export const Home = () => {
   const [isDoneDisplay, setIsDoneDisplay] = useState('todo'); // todo->未完了 done->完了
   const [lists, setLists] = useState([]);
-  const [selectListId, setSelectListId] = useState();
+  const [selectListId, setSelectListId] = useState('');
   const [tasks, setTasks] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [cookies] = useCookies();
+
   const handleIsDoneDisplayChange = (e) => setIsDoneDisplay(e.target.value);
+
   useEffect(() => {
     axios
       .get(`${url}/lists`, {
@@ -24,47 +26,36 @@ export const Home = () => {
       })
       .then((res) => {
         setLists(res.data);
+        if (res.data.length > 0) {
+          setSelectListId(res.data[0].id.toString()); // `string` 型に変換してセット
+        }
       })
       .catch((err) => {
         setErrorMessage(`リストの取得に失敗しました。${err}`);
       });
-  }, []);
+  }, [cookies.token]);
 
   useEffect(() => {
-    const listId = lists[0]?.id;
-    if (typeof listId !== 'undefined') {
-      setSelectListId(listId);
+    if (selectListId) {
       axios
-        .get(`${url}/lists/${listId}/tasks`, {
+        .get(`${url}/lists/${selectListId}/tasks`, {
           headers: {
             authorization: `Bearer ${cookies.token}`,
           },
         })
         .then((res) => {
-          console.log(res.data.tasks); // 取得したタスクデータをコンソールに出力
-          setTasks(res.data.tasks); // ここで取得したタスクのデータに `dueDate` が含まれているか確認
+          setTasks(res.data.tasks); // ここで取得したタスクのデータに dueDate が含まれているか確認
         })
         .catch((err) => {
           setErrorMessage(`タスクの取得に失敗しました。${err}`);
         });
     }
-  }, [lists]);
+  }, [selectListId, cookies.token]);
 
   const handleSelectList = (id) => {
     setSelectListId(id);
-    axios
-      .get(`${url}/lists/${id}/tasks`, {
-        headers: {
-          authorization: `Bearer ${cookies.token}`,
-        },
-      })
-      .then((res) => {
-        setTasks(res.data.tasks);
-      })
-      .catch((err) => {
-        setErrorMessage(`タスクの取得に失敗しました。${err}`);
-      });
   };
+
   return (
     <div>
       <Header />
@@ -91,7 +82,7 @@ export const Home = () => {
                 <li
                   key={key}
                   className={`list-tab-item ${isActive ? 'active' : ''}`}
-                  onClick={() => handleSelectList(list.id)}
+                  onClick={() => handleSelectList(list.id.toString())}
                 >
                   {list.title}
                 </li>
@@ -107,6 +98,7 @@ export const Home = () => {
               <select
                 onChange={handleIsDoneDisplayChange}
                 className="display-select"
+                value={isDoneDisplay}
               >
                 <option value="todo">未完了</option>
                 <option value="done">完了</option>
@@ -127,11 +119,12 @@ export const Home = () => {
 // 表示するタスク
 const Tasks = (props) => {
   const { tasks, selectListId, isDoneDisplay } = props;
-  if (tasks === null) return <></>;
 
-  const calculateRemainingTime = (dueDate) => {
+  if (!tasks) return <></>;
+
+  const calculateRemainingTime = (limit) => {
     const now = new Date(); // 現在の日時を取得
-    const due = new Date(dueDate); // 指定された期限日時を Date オブジェクトに変換
+    const due = new Date(limit); // 指定された期限日時を Date オブジェクトに変換
     const timeDiff = due - now; // 現在の日時と期限日時の差をミリ秒単位で計算
 
     if (timeDiff <= 0) return '期限切れ'; // timediffが0の場合、期限切れを表示する
@@ -162,14 +155,14 @@ const Tasks = (props) => {
             <br />
             {task.done ? '完了' : '未完了'}
             <br />
-            {task.dueDate ? (
+            {task.limit ? (
               <>
-                期限:${new Date(task.dueDate).toLocaleString()}`
+                期限:${new Date(task.limit).toLocaleString()}`
                 <br />
-                残り: {calculateRemainingTime(task.dueDate)}
+                残り: {calculateRemainingTime(task.limit)}
               </>
             ) : (
-              '期限未設定'
+              '期限なし'
             )}
           </Link>
         </li>
@@ -180,7 +173,7 @@ const Tasks = (props) => {
 
 Tasks.propTypes = {
   tasks: PropTypes.array.isRequired,
-  selectListId: PropTypes.number.isRequired, // `number` 型を期待
+  selectListId: PropTypes.string.isRequired, // `string` 型を期待
   isDoneDisplay: PropTypes.string.isRequired,
 };
 

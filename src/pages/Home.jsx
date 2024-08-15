@@ -56,6 +56,39 @@ export const Home = () => {
     setSelectListId(id);
   };
 
+  // "e"キーボードイベントオブジェクト。key プロパティを使用して、押されたキーを検出する
+  // "id"現在のリスト項目の ID。選択されたリスト項目の ID を管理するために使用される
+  const handleKeyDown = (e, id) => {
+    // "list"リスト項目の配列
+    // findIndex メソッドを使用して、selectListId が現在選択されているリスト項目の ID と一致するインデックスを取得する  。
+    // currentIndex には、選択されているリスト項目のインデックスが格納される
+    const currentIndex = lists.findIndex((list) => list.id === selectListId);
+    let nextIndex;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault(); // デフォルトのキー操作（スクロールなど）を無効化
+        nextIndex = currentIndex + 1; // 現在のインデックスに1を加え、次のリスト項目のインデックスを計算
+        if (nextIndex < lists.length) {
+          setSelectListId(lists[nextIndex].id.toString());
+        }
+        break;
+      case 'ArrowUp':
+        e.preventDefault(); // デフォルトのキー操作を無効化
+        nextIndex = currentIndex - 1; // 現在のインデックスから1を引き、前のリスト項目のインデックスを計算
+        if (nextIndex >= 0) {
+          setSelectListId(lists[nextIndex].id.toString()); // 次のリスト項目を選択するために、setSelectListId を呼び出す
+        }
+        break;
+      case 'Enter':
+        e.preventDefault(); // デフォルトのキー操作を無効化
+        handleSelectList(id); // 現在のリスト項目を選択するために handleSelectList を呼び出す
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -82,7 +115,11 @@ export const Home = () => {
                 <li
                   key={key}
                   className={`list-tab-item ${isActive ? 'active' : ''}`}
+                  role="tab"
+                  aria-selected={isActive}
+                  tabIndex={0}
                   onClick={() => handleSelectList(list.id.toString())}
+                  onKeyDown={(e) => handleKeyDown(e, list.id.toString())}
                 >
                   {list.title}
                 </li>

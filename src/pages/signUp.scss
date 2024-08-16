@@ -28,3 +28,40 @@
 .error-message {
   color: #ff3333;
 }
+
+/* タブレット（768px） */
+@media (max-width: 768px) {
+  .signup {
+    width: 80%; /* 幅を80%に設定して、タブレットの画面サイズに対応 */
+  }
+
+  .email-input, .name-input, .password-input {
+    height: 40px; /* 高さを調整して、タブレットの画面サイズに合わせる */
+  }
+
+  .signup-button {
+    width: 100%; /* ボタンの幅を100%に設定して、画面幅に合わせる */
+    height: auto; /* 高さを自動に設定して、ボタンがコンテナに収まるように */
+    font-size: 16px; /* フォントサイズを調整 */
+  }
+}
+
+/* スマホ（320px） */
+@media (max-width: 320px) {
+  .signup {
+    width: 100%; /* 幅を100%に設定して、画面いっぱいに広げる */
+    padding: 0 10px; /* 画面の端にスペースを追加 */
+  }
+
+  .email-input, .name-input, .password-input {
+    height: 50px; /* 高さを調整して、スマホの画面サイズに合わせる */
+    margin-bottom: 15px; /* マージンを減少 */
+  }
+
+  .signup-button {
+    width: 100%; /* ボタンの幅を100%に設定して、画面幅に合わせる */
+    height: auto; /* 高さを自動に設定して、ボタンがコンテナに収まるように */
+    font-size: 14px; /* フォントサイズを調整 */
+    margin-top: 10px; /* 上にスペースを追加 */
+  }
+}

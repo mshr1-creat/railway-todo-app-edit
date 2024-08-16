@@ -21,3 +21,40 @@
   height: 40px;
   border-radius: 5px;
 }
+
+/* タブレット（768px） */
+@media (max-width: 768px) {
+  .new-list {
+    width: 90%; /* 幅を90%に設定して、タブレットの画面サイズに対応 */
+  }
+
+  .new-list-title {
+    width: 100%; /* 幅を100%に設定して、画面にフィット */
+  }
+
+  .new-list-button {
+    width: 100%; /* ボタンの幅を100%に設定して、画面幅に合わせる */
+    height: auto; /* 高さを自動に設定して、ボタンがコンテナに収まるように */
+    font-size: 14px; /* フォントサイズを調整 */
+  }
+}
+
+/* スマホ（320px） */
+@media (max-width: 320px) {
+  .new-list {
+    width: 100%; /* 幅を100%に設定して、画面いっぱいに広げる */
+    padding: 0 10px; /* 画面の端にスペースを追加 */
+  }
+
+  .new-list-title {
+    width: 100%; /* 幅を100%に設定して、画面にフィット */
+    margin-bottom: 15px; /* マージンを減少 */
+  }
+
+  .new-list-button {
+    width: 100%; /* ボタンの幅を100%に設定して、画面幅に合わせる */
+    height: auto; /* 高さを自動に設定して、ボタンがコンテナに収まるように */
+    font-size: 12px; /* フォントサイズを調整 */
+    margin: 10px 0; /* 上下にスペースを確保 */
+  }
+}

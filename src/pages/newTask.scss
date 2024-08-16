@@ -31,3 +31,48 @@
 .error-message {
   color: #ff3333;
 }
+
+/* タブレット（768px） */
+@media (max-width: 768px) {
+  .new-task {
+    width: 90%; /* 幅を90%に設定して、タブレットの画面サイズに対応 */
+  }
+
+  .new-task-select-list, .new-task-title, .new-task-detail {
+    width: 100%; /* 幅を100%に設定して、画面にフィット */
+  }
+
+  .new-task-detail {
+    height: 150px; /* 高さを調整して、タブレットの画面に収まるように */
+  }
+
+  .new-task-button {
+    width: 100%; /* ボタンの幅を100%に設定して、画面幅に合わせる */
+    height: auto; /* 高さを自動に設定して、ボタンがコンテナに収まるように */
+    font-size: 14px; /* フォントサイズを調整 */
+  }
+}
+
+/* スマホ（320px） */
+@media (max-width: 320px) {
+  .new-task {
+    width: 100%; /* 幅を100%に設定して、画面いっぱいに広げる */
+    padding: 0 10px; /* 画面の端にスペースを追加 */
+  }
+
+  .new-task-select-list, .new-task-title, .new-task-detail {
+    width: 100%; /* 幅を100%に設定して、画面にフィット */
+    margin-bottom: 15px; /* マージンを減少 */
+  }
+
+  .new-task-detail {
+    height: 100px; /* 高さを調整して、スマホの画面に収まるように */
+  }
+
+  .new-task-button {
+    width: 100%; /* ボタンの幅を100%に設定して、画面幅に合わせる */
+    height: auto; /* 高さを自動に設定して、ボタンがコンテナに収まるように */
+    font-size: 12px; /* フォントサイズを調整 */
+    margin: 10px 0; /* 上下にスペースを確保 */
+  }
+}
